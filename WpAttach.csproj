@@ -19,7 +19,7 @@
     <OutputPath>.\bin\Debug\</OutputPath>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <IncrementalBuild>false</IncrementalBuild>
     <DocumentationFile>WpAttach.xml</DocumentationFile>
   </PropertyGroup>
@@ -43,6 +43,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -52,6 +55,13 @@
     </Compile>
     <Compile Include="Connect.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProcessInfo.cs" />
+    <Compile Include="ProcessList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProcessList.Designer.cs">
+      <DependentUpon>ProcessList.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -111,10 +121,12 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Users\dan.clarke\Documents\Visual Studio 2010\Addins\WpAttach - For Testing.AddIn">
-      <Link>WpAttach - For Testing.AddIn</Link>
-    </Content>
     <Content Include="WpAttach.AddIn" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProcessList.resx">
+      <DependentUpon>ProcessList.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <PropertyGroup>
