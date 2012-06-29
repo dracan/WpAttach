@@ -10,6 +10,7 @@ namespace WpAttach
 	public partial class ProcessList : Form
 	{
 		private DTE2 _applicationObject;
+		private static int _previousPID;
 
 		public ProcessList(DTE2 applicationObject)
 		{
@@ -20,9 +21,23 @@ namespace WpAttach
 
 		private void ProcessList_Load(object sender, EventArgs e)
 		{
+			var processList = GetW3WPProcesses();
+
 			lbProcesses.DisplayMember = "Owner";
 			lbProcesses.ValueMember = "PID";
 			lbProcesses.DataSource = GetW3WPProcesses();
+
+			if(_previousPID > 0)
+			{
+				var lastProcess = (from p in processList
+								  where p.PID == _previousPID
+								  select p).FirstOrDefault();
+
+				if(lastProcess != null)
+				{
+					lbProcesses.SelectedValue = lastProcess.PID;
+				}
+			}
 		}
 
 		public List<ProcessInfo> GetW3WPProcesses()
@@ -59,14 +74,7 @@ namespace WpAttach
 
 		private void lbProcesses_DoubleClick(object sender, EventArgs e)
 		{
-			if(lbProcesses.SelectedItem != null)
-			{
-				var procInfo = (ProcessInfo)lbProcesses.SelectedItem;
-
-				procInfo.EnvDteProcess.Attach();
-
-				Close();
-			}
+			AttachToSelectedProcess();
 		}
 
 		private void lbProcesses_KeyPress(object sender, KeyPressEventArgs e)
@@ -75,14 +83,7 @@ namespace WpAttach
 			{
 				case (char)Keys.Return:
 				{
-					if(lbProcesses.SelectedItem != null)
-					{
-						var procInfo = (ProcessInfo)lbProcesses.SelectedItem;
-
-						procInfo.EnvDteProcess.Attach();
-
-						Close();
-					}
+					AttachToSelectedProcess();
 
 		            e.Handled = true;
 					break;
@@ -94,6 +95,20 @@ namespace WpAttach
 					Close();
 					break;
 				}
+			}
+		}
+
+		private void AttachToSelectedProcess()
+		{
+			if(lbProcesses.SelectedItem != null)
+			{
+				var procInfo = (ProcessInfo)lbProcesses.SelectedItem;
+
+				procInfo.EnvDteProcess.Attach();
+
+				_previousPID = procInfo.PID;
+
+				Close();
 			}
 		}
 	}
